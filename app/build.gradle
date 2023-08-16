@@ -69,7 +69,10 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
     implementation 'androidx.compose.material:material-icons-extended:1.4.3'
+    implementation 'androidx.health:health-services-client:1.0.0-rc01'
 
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0"
     implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0"
+
+    implementation "com.google.guava:guava:31.0.1-android"
 }
