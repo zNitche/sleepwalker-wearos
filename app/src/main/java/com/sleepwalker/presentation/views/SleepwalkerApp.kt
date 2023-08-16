@@ -10,17 +10,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
+import com.sleepwalker.presentation.models.HeartBeatViewModel
 
 @Composable
-fun HeartBeat(
-    heartBeat: String,
-    enabled: Boolean,
-    onEnabledButtonClick: () -> Unit,) {
+fun SleepwalkerApp(
+    healthViewModel: HeartBeatViewModel,) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -32,13 +30,13 @@ fun HeartBeat(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             color = MaterialTheme.colors.primary,
-            text = heartBeat
+            text = healthViewModel.heartBeatText.collectAsStateWithLifecycle().value
         )
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { onEnabledButtonClick() }
+            onClick = { healthViewModel.toggleEnabled() }
         ) {
-            val buttonTextId = if (enabled) {
+            val buttonTextId = if (healthViewModel.enabled.collectAsStateWithLifecycle().value) {
                 "Stop"
             } else {
                 "Start"
@@ -46,10 +44,4 @@ fun HeartBeat(
             Text(buttonTextId)
         }
     }
-}
-
-@Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
-@Composable
-fun DefaultPreview() {
-    HeartBeat(heartBeat = "0", enabled = false, onEnabledButtonClick = {})
 }
