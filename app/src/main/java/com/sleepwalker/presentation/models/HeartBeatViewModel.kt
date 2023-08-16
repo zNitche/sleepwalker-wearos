@@ -1,4 +1,4 @@
-package com.sleepwalker.presentation
+package com.sleepwalker.presentation.models
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
