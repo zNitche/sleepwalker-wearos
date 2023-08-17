@@ -12,10 +12,10 @@ import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class HeartBeatViewModel(
+class MainViewModel(
     private val healthService: HealthService
 ): ViewModel() {
-    val enabled = MutableStateFlow(true)
+    val isRunning = MutableStateFlow(false)
     private val _heartBeat = MutableStateFlow(0.0)
 
     val heartBeatText = _heartBeat.map {
@@ -28,10 +28,10 @@ class HeartBeatViewModel(
 
     init {
         viewModelScope.launch {
-            enabled.collect {
+            isRunning.collect {
                 if (it) {
                     healthService.heartRateMeasureFlow()
-                        .takeWhile { enabled.value }
+                        .takeWhile { isRunning.value }
                         .collect { heartBeat ->
                             _heartBeat.update { heartBeat }
                         }
@@ -40,19 +40,19 @@ class HeartBeatViewModel(
         }
     }
 
-    fun toggleEnabled() {
-        enabled.update { !it }
+    fun setIsRunning(state: Boolean) {
+        isRunning.update { state }
     }
 }
 
 
-class HeartBeatViewModelFactory(
+class MainViewModelFactory(
     private val healthService: HealthService
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(HeartBeatViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return HeartBeatViewModel(
+            return MainViewModel(
                 healthService = healthService
             ) as T
         }
