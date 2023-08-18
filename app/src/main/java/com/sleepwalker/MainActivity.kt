@@ -5,10 +5,18 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.sleepwalker.presentation.models.MainViewModel
 import com.sleepwalker.presentation.models.MainViewModelFactory
+import com.sleepwalker.presentation.models.SettingsViewModel
+import com.sleepwalker.presentation.models.SettingsViewModelFactory
 import com.sleepwalker.presentation.views.MainView
+import com.sleepwalker.presentation.views.SettingsView
 
 
 const val PERMISSIONS_REQUEST_CODE = 100
@@ -22,15 +30,36 @@ class MainActivity : ComponentActivity() {
             requestPermissions(REQUIRED_PERMISSIONS, PERMISSIONS_REQUEST_CODE)
         }
 
-        val healthService = (application as MainApplication).healthService
-
         setContent {
-            val mainViewModel = viewModel<MainViewModel>(
-                factory = MainViewModelFactory(healthService=healthService)
-            )
+            val navController = rememberNavController()
 
-            MainView(viewModel = mainViewModel)
+            NavHost(navController = navController, startDestination = "main") {
+                composable("main") { CreateMainView(navController) }
+                composable("settings") { CreateSettingsView(navController) }
+            }
         }
+    }
+
+    @Composable
+    private fun CreateMainView(navController: NavHostController) {
+        val healthService = (application as MainApplication).healthService
+        val mainViewModel = viewModel<MainViewModel>(
+            factory = MainViewModelFactory(
+                healthService=healthService,
+                navController=navController,)
+        )
+
+        return MainView(viewModel = mainViewModel)
+    }
+
+    @Composable
+    private fun CreateSettingsView(navController: NavHostController) {
+        val viewModel = viewModel<SettingsViewModel>(
+            factory = SettingsViewModelFactory(
+                navController=navController,)
+        )
+
+        return SettingsView(viewModel = viewModel)
     }
 
     private fun hasPermissions(): Boolean {

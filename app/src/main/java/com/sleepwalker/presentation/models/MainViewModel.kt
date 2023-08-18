@@ -3,6 +3,7 @@ package com.sleepwalker.presentation.models
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.sleepwalker.services.HealthService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,7 +14,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val healthService: HealthService
+    private val healthService: HealthService,
+    val navController: NavHostController
 ): ViewModel() {
     val isRunning = MutableStateFlow(false)
     private val _heartBeat = MutableStateFlow(0.0)
@@ -47,13 +49,15 @@ class MainViewModel(
 
 
 class MainViewModelFactory(
-    private val healthService: HealthService
+    private val healthService: HealthService,
+    private val navController: NavHostController
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return MainViewModel(
-                healthService = healthService
+                healthService = healthService,
+                navController = navController
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

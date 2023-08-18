@@ -16,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.wear.compose.material.Button
+import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
@@ -70,6 +72,16 @@ fun MainView(viewModel: MainViewModel) {
                     text = heartBeatText
                 )
             }
+        }
+        Button(
+            onClick = {
+                viewModel.setIsRunning(false)
+                viewModel.navController.navigate("settings")
+            },
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.DarkGray)
+        ) {
+            Text(text = "Settings")
         }
     }
 }
