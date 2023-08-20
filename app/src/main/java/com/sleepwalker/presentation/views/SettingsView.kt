@@ -1,43 +1,25 @@
 package com.sleepwalker.presentation.views
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
-import androidx.wear.compose.material.Button
-import androidx.wear.compose.material.ButtonDefaults
-import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.Text
+import androidx.wear.compose.material.AutoCenteringParams
+import androidx.wear.compose.material.ScalingLazyColumn
+import androidx.wear.compose.material.rememberScalingLazyListState
+import com.sleepwalker.APP_TAG
 import com.sleepwalker.presentation.models.SettingsViewModel
 
 @Composable
 fun SettingsView(viewModel: SettingsViewModel) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Center
+    val listState = rememberScalingLazyListState()
+
+    ScalingLazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        autoCentering = AutoCenteringParams(itemIndex = 0),
+        state = listState
     ) {
-        Text(
-            color = Color.White,
-            text = "SleepWalker - Settings",
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-        )
-        Button(
-            onClick = { viewModel.navController.navigate("main") },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.DarkGray)
-        ) {
-            Text(text = "Go Back")
-        }
+
+        item { AppTitleText("$APP_TAG - Settings") }
+        item { GoBackNavButton(viewModel.navController) }
     }
 }

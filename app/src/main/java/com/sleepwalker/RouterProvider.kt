@@ -32,7 +32,7 @@ class RouterProvider(private val application: MainApplication) {
         val mainViewModel = viewModel<MainViewModel>(
             factory = MainViewModelFactory(
                 healthService=healthService,
-                navController=navController,)
+                navController=navController)
         )
 
         return MainView(viewModel = mainViewModel)
@@ -42,7 +42,7 @@ class RouterProvider(private val application: MainApplication) {
     private fun CreateSettingsView(navController: NavHostController) {
         val viewModel = viewModel<SettingsViewModel>(
             factory = SettingsViewModelFactory(
-                navController=navController,)
+                navController=navController)
         )
 
         return SettingsView(viewModel = viewModel)
