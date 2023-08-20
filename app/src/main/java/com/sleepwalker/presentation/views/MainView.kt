@@ -5,7 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.wear.compose.material.AutoCenteringParams
+import androidx.wear.compose.material.PositionIndicator
+import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.ScalingLazyColumn
+import androidx.wear.compose.material.TimeText
+import androidx.wear.compose.material.Vignette
+import androidx.wear.compose.material.VignettePosition
 import androidx.wear.compose.material.rememberScalingLazyListState
 import com.sleepwalker.APP_TAG
 import com.sleepwalker.presentation.models.MainViewModel
@@ -17,19 +22,33 @@ fun MainView(viewModel: MainViewModel) {
     val heartBeatText = viewModel.heartBeatText.collectAsStateWithLifecycle().value
     val isRunning = viewModel.isRunning.collectAsStateWithLifecycle().value
 
-    ScalingLazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        autoCentering = AutoCenteringParams(itemIndex = 0),
-        state = listState
-    ) {
-
-        item { AppTitleText(APP_TAG) }
-        item { ProcessingToggle(isRunning, viewModel::setIsRunning) }
-
-        if (isRunning) {
-            item { HBSLabel(heartBeatText) }
+    Scaffold(
+        timeText = {
+            TimeText()
+        },
+        vignette = {
+            Vignette(vignettePosition = VignettePosition.TopAndBottom)
+        },
+        positionIndicator = {
+            PositionIndicator(
+                scalingLazyListState = listState
+            )
         }
+    ) {
+        ScalingLazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            autoCentering = AutoCenteringParams(itemIndex = 0),
+            state = listState
+        ) {
 
-        item { SettingsNavButton(viewModel) }
+            item { AppTitleText(APP_TAG) }
+            item { ProcessingToggle(isRunning, viewModel::setIsRunning) }
+
+            if (isRunning) {
+                item { HBSLabel(heartBeatText) }
+            }
+
+            item { SettingsNavButton(viewModel) }
+        }
     }
 }
