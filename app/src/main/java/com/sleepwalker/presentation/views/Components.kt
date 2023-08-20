@@ -1,8 +1,7 @@
 package com.sleepwalker.presentation.views
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
@@ -13,6 +12,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.Chip
+import androidx.wear.compose.material.ChipDefaults
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.ToggleChip
@@ -47,22 +48,23 @@ fun ProcessingToggle(isRunning: Boolean, setIsRunning: (Boolean) -> Unit) {
 }
 
 @Composable
-fun HBSLabel(hbsText: String) {
-    Row(
+fun HBSChip(hbsText: String) {
+    Chip(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
-            imageVector = Icons.Default.Favorite,
-            contentDescription = "Heart Beat",
-            tint = Color.Red
-        )
-        Text(
-            color = Color.White,
-            text = hbsText
-        )
-    }
+        onClick = { },
+        label = {
+            Text(text = hbsText)
+        },
+        icon = {
+            Icon(
+                imageVector = Icons.Default.Favorite,
+                contentDescription = "Heart Beat",
+                tint = Color.Red,
+                modifier = Modifier.wrapContentSize(align = Alignment.Center)
+            )
+        },
+        colors = ChipDefaults.secondaryChipColors()
+    )
 }
 
 @Composable
@@ -73,7 +75,7 @@ fun SettingsNavButton(viewModel: MainViewModel) {
             viewModel.navController.navigate("settings")
         },
         modifier = Modifier.fillMaxWidth(),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.DarkGray)
+        colors = ButtonDefaults.secondaryButtonColors()
     ) {
         Text(text = "Settings")
     }
@@ -84,7 +86,7 @@ fun GoBackNavButton(navController: NavHostController) {
     Button(
         onClick = { navController.navigate("main") },
         modifier = Modifier.fillMaxWidth(),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.DarkGray)
+        colors = ButtonDefaults.secondaryButtonColors()
     ) {
         Text(text = "Go Back")
     }

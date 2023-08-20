@@ -46,7 +46,7 @@ fun MainView(viewModel: MainViewModel) {
             item { ProcessingToggle(isRunning, viewModel::setIsRunning) }
 
             if (isRunning) {
-                item { HBSLabel(heartBeatText) }
+                item { HBSChip(heartBeatText) }
             }
 
             item { SettingsNavButton(viewModel) }
