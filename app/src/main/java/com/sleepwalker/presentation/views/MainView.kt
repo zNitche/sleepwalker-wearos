@@ -12,6 +12,7 @@ import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.material.Vignette
 import androidx.wear.compose.material.VignettePosition
 import androidx.wear.compose.material.rememberScalingLazyListState
+import androidx.wear.compose.material.scrollAway
 import com.sleepwalker.APP_TAG
 import com.sleepwalker.presentation.models.MainViewModel
 
@@ -24,7 +25,7 @@ fun MainView(viewModel: MainViewModel) {
 
     Scaffold(
         timeText = {
-            TimeText()
+            TimeText(modifier = Modifier.scrollAway(listState))
         },
         vignette = {
             Vignette(vignettePosition = VignettePosition.TopAndBottom)
