@@ -1,5 +1,6 @@
 package com.sleepwalker.presentation.models
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
@@ -7,7 +8,8 @@ import androidx.navigation.NavHostController
 class SettingsViewModel(
     val navController: NavHostController
 ): ViewModel() {
-
+    val apiKeyValue = mutableStateOf("api_key")
+    val apiAddressValue = mutableStateOf("address")
 }
 
 

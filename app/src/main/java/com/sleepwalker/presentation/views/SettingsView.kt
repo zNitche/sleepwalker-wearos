@@ -18,6 +18,8 @@ import com.sleepwalker.presentation.models.SettingsViewModel
 @Composable
 fun SettingsView(viewModel: SettingsViewModel) {
     val listState = rememberScalingLazyListState()
+    val apiKeyValue = viewModel.apiKeyValue
+    val apiAddressValue = viewModel.apiAddressValue
 
     Scaffold(
         timeText = {
@@ -37,8 +39,9 @@ fun SettingsView(viewModel: SettingsViewModel) {
             autoCentering = AutoCenteringParams(itemIndex = 0),
             state = listState
         ) {
-
             item { AppTitleText("$APP_TAG - Settings") }
+            item { ApiKeyTextInput(apiKeyValue) }
+            item { ApiAddressTextInput(apiAddressValue) }
             item { GoBackNavButton(viewModel.navController) }
         }
     }
