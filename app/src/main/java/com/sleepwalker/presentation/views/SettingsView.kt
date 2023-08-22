@@ -42,6 +42,7 @@ fun SettingsView(viewModel: SettingsViewModel) {
             item { AppTitleText("$APP_TAG - Settings") }
             item { ApiKeyTextInput(apiKeyValue) }
             item { ApiAddressTextInput(apiAddressValue) }
+            item { ApplySettingsButton(viewModel::applySettings) }
             item { GoBackNavButton(viewModel.navController) }
         }
     }

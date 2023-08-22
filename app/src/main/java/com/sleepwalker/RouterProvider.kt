@@ -1,5 +1,6 @@
 package com.sleepwalker
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -40,9 +41,11 @@ class RouterProvider(private val application: MainApplication) {
 
     @Composable
     private fun CreateSettingsView(navController: NavHostController) {
+        val configService = application.configService
         val viewModel = viewModel<SettingsViewModel>(
             factory = SettingsViewModelFactory(
-                navController=navController)
+                navController=navController,
+                configService=configService)
         )
 
         return SettingsView(viewModel = viewModel)

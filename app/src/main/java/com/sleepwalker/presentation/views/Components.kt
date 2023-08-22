@@ -12,8 +12,10 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Api
+import androidx.compose.material.icons.filled.Approval
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
@@ -103,6 +105,17 @@ fun GoBackNavButton(navController: NavHostController) {
         colors = ButtonDefaults.secondaryButtonColors()
     ) {
         Text(text = "Go Back")
+    }
+}
+
+@Composable
+fun ApplySettingsButton(onClick: () -> Unit) {
+    Button(
+        onClick = { onClick() },
+        modifier = Modifier.fillMaxWidth(),
+        colors = ButtonDefaults.secondaryButtonColors()
+    ) {
+        Text(text = "Apply")
     }
 }
 

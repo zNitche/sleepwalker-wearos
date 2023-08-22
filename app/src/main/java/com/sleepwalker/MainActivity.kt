@@ -5,26 +5,13 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.sleepwalker.utils.fileExists
-import com.sleepwalker.utils.readFile
-import com.sleepwalker.utils.writeToFile
-
-
 
 const val PERMISSIONS_REQUEST_CODE = 100
 val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.BODY_SENSORS)
 
 class MainActivity : ComponentActivity() {
-    var config = Config()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (fileExists(filesDir, CONFIG_NAME)) {
-            config = decodeConfigFromJson(readFile(filesDir, CONFIG_NAME))
-        } else {
-            writeToFile(filesDir, CONFIG_NAME, encodeConfigToJson(config))
-        }
 
         if (!hasPermissions()) {
             requestPermissions(REQUIRED_PERMISSIONS, PERMISSIONS_REQUEST_CODE)
