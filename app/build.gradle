@@ -61,7 +61,6 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.5.1'
     implementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.1.1'
     implementation 'androidx.compose.material:material-icons-extended:1.4.3'
-    implementation 'androidx.health:health-services-client:1.0.0-rc01'
     implementation "androidx.navigation:navigation-compose:2.6.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0"
     implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0"

@@ -4,18 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.sleepwalker.services.HealthService
 import com.sleepwalker.services.SensorsService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val healthService: HealthService,
     private val sensorsService: SensorsService,
     val navController: NavHostController
 ): ViewModel() {
@@ -58,7 +54,6 @@ class MainViewModel(
 
 
 class MainViewModelFactory(
-    private val healthService: HealthService,
     private val sensorsService: SensorsService,
     private val navController: NavHostController
 ) : ViewModelProvider.Factory {
@@ -66,7 +61,6 @@ class MainViewModelFactory(
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return MainViewModel(
-                healthService = healthService,
                 sensorsService = sensorsService,
                 navController = navController
             ) as T
