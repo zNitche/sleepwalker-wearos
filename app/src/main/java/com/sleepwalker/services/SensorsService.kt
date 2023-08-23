@@ -1,24 +1,50 @@
 package com.sleepwalker.services
 
 import android.hardware.SensorManager
-import android.util.Log
-import com.sleepwalker.APP_TAG
 import com.sleepwalker.services.sensors.AccelerationSensor
+import com.sleepwalker.services.sensors.DeviceSensor
+import com.sleepwalker.services.sensors.HeartBeatSensor
 
 class SensorsService(private val sensorManager: SensorManager) {
-    private val accelerationSensor: AccelerationSensor = AccelerationSensor(sensorManager)
+    private val sensors: List<DeviceSensor> = getSensors()
 
-    fun setup() {
-        accelerationSensor.startListening()
-        accelerationSensor.setOnSensorValuesChangedListener { values ->
-            Log.d(APP_TAG, "Sensor ${accelerationSensor.getSensorTypeId()} - $values")
+    private fun getSensors(): List<DeviceSensor> {
+        return listOf(
+            AccelerationSensor(sensorManager),
+            HeartBeatSensor(sensorManager)
+        )
+    }
+
+    fun getSensorById(typeId: Int): DeviceSensor? {
+        var sensor: DeviceSensor? = null;
+
+        for (s in sensors) {
+            if (s.getSensorTypeId() == typeId) {
+                sensor = s
+                break
+            }
         }
 
-        Log.d(APP_TAG, "registered sensor listener")
+        return sensor
+    }
+
+    fun initSensorById(typeId: Int, callback: (List<Float>) -> Unit): Boolean {
+        var status = false
+        val sensor = getSensorById(typeId)
+
+        if (sensor != null) {
+            sensor.startListening()
+            sensor.setOnSensorValuesChangedListener({ values -> callback(values) })
+
+            status = true
+        }
+
+        return status
     }
 
     fun tearDown() {
-        accelerationSensor.stopListening()
-        Log.d(APP_TAG, "Unregistered sensor listener")
+        for (sensor in sensors) {
+            sensor.stopListening()
+        }
     }
 }
