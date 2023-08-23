@@ -8,22 +8,31 @@ import android.hardware.SensorManager
 
 abstract class DeviceSensor(
     private val sensorManager: SensorManager,
-    sensorType: Int
-): MeasurableSensor(sensorType), SensorEventListener {
-
+    private val sensorType: Int,
+    private val refreshRate: Int = SensorManager.SENSOR_DELAY_NORMAL
+): SensorEventListener {
     private var sensor: Sensor? = null
+    private var onSensorValuesChanged: ((List<Float>) -> Unit)? = null
 
-    override fun startListening() {
+    fun getSensorTypeId(): Int {
+        return sensorType
+    }
+
+    fun startListening() {
         if(sensor == null) {
             sensor = sensorManager.getDefaultSensor(sensorType)
         }
         sensor?.let {
-            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
+            sensorManager.registerListener(this, it, refreshRate)
         }
     }
 
-    override fun stopListening() {
+    fun stopListening() {
         sensorManager.unregisterListener(this)
+    }
+
+    fun setOnSensorValuesChangedListener(listener: (List<Float>) -> Unit) {
+        onSensorValuesChanged = listener
     }
 
     override fun onSensorChanged(event: SensorEvent?) {

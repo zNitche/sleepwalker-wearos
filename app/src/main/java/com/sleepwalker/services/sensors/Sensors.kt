@@ -8,12 +8,12 @@ class AccelerationSensor(
     sensorManager: SensorManager
 ): DeviceSensor(
     sensorManager = sensorManager,
-    sensorType = Sensor.TYPE_ACCELEROMETER
+    sensorType = Sensor.TYPE_ACCELEROMETER,
 )
 
 class HeartBeatSensor(
     sensorManager: SensorManager
 ): DeviceSensor(
     sensorManager = sensorManager,
-    sensorType = Sensor.TYPE_HEART_RATE
+    sensorType = Sensor.TYPE_HEART_RATE,
 )
