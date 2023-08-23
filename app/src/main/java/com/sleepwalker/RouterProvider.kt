@@ -1,6 +1,5 @@
 package com.sleepwalker
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -13,6 +12,7 @@ import com.sleepwalker.presentation.models.SettingsViewModel
 import com.sleepwalker.presentation.models.SettingsViewModelFactory
 import com.sleepwalker.presentation.views.MainView
 import com.sleepwalker.presentation.views.SettingsView
+import com.sleepwalker.services.SensorsService
 
 
 class RouterProvider(private val application: MainApplication) {
@@ -30,9 +30,12 @@ class RouterProvider(private val application: MainApplication) {
     @Composable
     private fun CreateMainView(navController: NavHostController) {
         val healthService = application.healthService
+        val sensorsService = SensorsService(application.sensorManager)
+
         val mainViewModel = viewModel<MainViewModel>(
             factory = MainViewModelFactory(
                 healthService=healthService,
+                sensorsService=sensorsService,
                 navController=navController)
         )
 

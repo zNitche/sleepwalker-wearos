@@ -7,7 +7,6 @@ import androidx.health.services.client.MeasureCallback
 import androidx.health.services.client.data.Availability
 import androidx.health.services.client.data.DataPointContainer
 import androidx.health.services.client.data.DataType
-import androidx.health.services.client.data.DataTypeAvailability
 import androidx.health.services.client.data.DeltaDataType
 import com.sleepwalker.APP_TAG
 import kotlinx.coroutines.channels.awaitClose
@@ -24,9 +23,7 @@ class HealthService(context: Context) {
             override fun onAvailabilityChanged(
                 dataType: DeltaDataType<*, *>,
                 availability: Availability
-            ) {
-                if (availability is DataTypeAvailability) { }
-            }
+            ) { }
 
             override fun onDataReceived(data: DataPointContainer) {
                 trySendBlocking(data.getData(DataType.HEART_RATE_BPM).last().value)

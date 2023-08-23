@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.sleepwalker.services.HealthService
+import com.sleepwalker.services.SensorsService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val healthService: HealthService,
+    private val sensorsService: SensorsService,
     val navController: NavHostController
 ): ViewModel() {
     val isRunning = MutableStateFlow(false)
@@ -29,27 +31,35 @@ class MainViewModel(
     )
 
     init {
-        viewModelScope.launch {
-            isRunning.collect {
-                if (it) {
-                    healthService.heartRateMeasureFlow()
-                        .takeWhile { isRunning.value }
-                        .collect { heartBeat ->
-                            _heartBeat.update { heartBeat }
-                        }
-                }
-            }
-        }
+        sensorsService.setup()
+
+//        viewModelScope.launch {
+//            isRunning.collect {
+//                if (it) {
+//                    healthService.heartRateMeasureFlow()
+//                        .takeWhile { isRunning.value }
+//                        .collect { heartBeat ->
+//                            _heartBeat.update { heartBeat }
+//                        }
+//                }
+//            }
+//        }
     }
 
     fun setIsRunning(state: Boolean) {
         isRunning.update { state }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        sensorsService.tearDown()
     }
 }
 
 
 class MainViewModelFactory(
     private val healthService: HealthService,
+    private val sensorsService: SensorsService,
     private val navController: NavHostController
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -57,6 +67,7 @@ class MainViewModelFactory(
             @Suppress("UNCHECKED_CAST")
             return MainViewModel(
                 healthService = healthService,
+                sensorsService = sensorsService,
                 navController = navController
             ) as T
         }
