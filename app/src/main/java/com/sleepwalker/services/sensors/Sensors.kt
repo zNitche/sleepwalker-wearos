@@ -17,3 +17,10 @@ class HeartBeatSensor(
     sensorManager = sensorManager,
     sensorType = Sensor.TYPE_HEART_RATE,
 )
+
+class AmbientTemperatureSensor(
+    sensorManager: SensorManager
+): DeviceSensor(
+    sensorManager = sensorManager,
+    sensorType = Sensor.TYPE_AMBIENT_TEMPERATURE,
+)

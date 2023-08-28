@@ -2,6 +2,7 @@ package com.sleepwalker.services
 
 import android.hardware.SensorManager
 import com.sleepwalker.services.sensors.AccelerationSensor
+import com.sleepwalker.services.sensors.AmbientTemperatureSensor
 import com.sleepwalker.services.sensors.DeviceSensor
 import com.sleepwalker.services.sensors.HeartBeatSensor
 
@@ -11,7 +12,8 @@ class SensorsService(private val sensorManager: SensorManager) {
     private fun getSensors(): List<DeviceSensor> {
         return listOf(
             AccelerationSensor(sensorManager),
-            HeartBeatSensor(sensorManager)
+            HeartBeatSensor(sensorManager),
+            AmbientTemperatureSensor(sensorManager)
         )
     }
 

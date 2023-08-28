@@ -21,6 +21,9 @@ fun MainView(viewModel: MainViewModel) {
     val listState = rememberScalingLazyListState()
 
     val heartBeatText = viewModel.heartBeatText.collectAsStateWithLifecycle().value
+    val accelerationText = viewModel.accelerationText.collectAsStateWithLifecycle().value
+    val temperatureText = viewModel.temperatureText.collectAsStateWithLifecycle().value
+
     val isRunning = viewModel.isRunning.collectAsStateWithLifecycle().value
 
     Scaffold(
@@ -47,6 +50,8 @@ fun MainView(viewModel: MainViewModel) {
 
             if (isRunning) {
                 item { HBSChip(heartBeatText) }
+                item { AccelerationChip(accelerationText) }
+                item { EnvironmentTemperatureChip(temperatureText) }
             }
 
             item { SettingsNavButton(viewModel) }

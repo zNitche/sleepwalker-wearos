@@ -13,9 +13,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Api
 import androidx.compose.material.icons.filled.Approval
+import androidx.compose.material.icons.filled.DeviceThermostat
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Flip
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
@@ -76,6 +79,46 @@ fun HBSChip(hbsText: String) {
                 imageVector = Icons.Default.Favorite,
                 contentDescription = "Heart Beat",
                 tint = Color.Red,
+                modifier = Modifier.wrapContentSize(align = Alignment.Center)
+            )
+        },
+        colors = ChipDefaults.secondaryChipColors()
+    )
+}
+
+@Composable
+fun AccelerationChip(accelerationText: String) {
+    Chip(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { },
+        label = {
+            Text(text = accelerationText)
+        },
+        icon = {
+            Icon(
+                imageVector = Icons.Default.Flip,
+                contentDescription = "Acceleration",
+                tint = Color.White,
+                modifier = Modifier.wrapContentSize(align = Alignment.Center)
+            )
+        },
+        colors = ChipDefaults.secondaryChipColors()
+    )
+}
+
+@Composable
+fun EnvironmentTemperatureChip(tempText: String) {
+    Chip(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { },
+        label = {
+            Text(text = tempText)
+        },
+        icon = {
+            Icon(
+                imageVector = Icons.Default.Thermostat,
+                contentDescription = "Environment temperature",
+                tint = Color.White,
                 modifier = Modifier.wrapContentSize(align = Alignment.Center)
             )
         },
