@@ -15,12 +15,14 @@ import androidx.compose.material.icons.filled.Api
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Flip
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Percent
 import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -34,6 +36,7 @@ import androidx.wear.compose.material.LocalTextStyle
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.ToggleChip
 import androidx.wear.compose.material.ToggleChipDefaults
+import com.sleepwalker.R
 import com.sleepwalker.presentation.models.MainViewModel
 
 @Composable
@@ -115,6 +118,46 @@ fun EnvironmentTemperatureChip(tempText: String) {
             Icon(
                 imageVector = Icons.Default.Thermostat,
                 contentDescription = "Environment temperature",
+                tint = Color.White,
+                modifier = Modifier.wrapContentSize(align = Alignment.Center)
+            )
+        },
+        colors = ChipDefaults.secondaryChipColors()
+    )
+}
+
+@Composable
+fun RelativeHumidityChip(humidityText: String) {
+    Chip(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { },
+        label = {
+            Text(text = humidityText)
+        },
+        icon = {
+            Icon(
+                painter = painterResource(R.drawable.humidity),
+                contentDescription = "",
+                tint = Color.White,
+                modifier = Modifier.wrapContentSize(align = Alignment.Center)
+            )
+        },
+        colors = ChipDefaults.secondaryChipColors()
+    )
+}
+
+@Composable
+fun PressureChip(pressureText: String) {
+    Chip(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { },
+        label = {
+            Text(text = pressureText)
+        },
+        icon = {
+            Icon(
+                painter = painterResource(R.drawable.compress),
+                contentDescription = "",
                 tint = Color.White,
                 modifier = Modifier.wrapContentSize(align = Alignment.Center)
             )

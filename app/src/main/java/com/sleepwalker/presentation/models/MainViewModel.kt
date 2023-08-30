@@ -19,7 +19,7 @@ class MainViewModel(
     val navController: NavHostController
 ): ViewModel() {
     val isRunning = MutableStateFlow(false)
-    private val _heartBeat = MutableStateFlow(0.0)
+    private val _heartBeat = MutableStateFlow(0f)
 
     private val _accelerationChanged = MutableStateFlow(false)
     private val _accelerationX = mutableStateOf(0f)
@@ -27,6 +27,8 @@ class MainViewModel(
     private val _accelerationZ = mutableStateOf(0f)
 
     private val _temperature = MutableStateFlow(0f)
+    private val _humidity = MutableStateFlow(0f)
+    private val _pressure = MutableStateFlow(0f)
 
     val heartBeatText = _heartBeat.map {
         heartBeat -> "${heartBeat.toInt()} bpm"
@@ -52,6 +54,22 @@ class MainViewModel(
         "- °C"
     )
 
+    val humidityText = _humidity.map {
+            hum -> "${hum.toInt()} %"
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(1000, 5000),
+        "- %"
+    )
+
+    val pressureText = _pressure.map {
+            pressure -> "${pressure.toInt()} hPa"
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(1000, 5000),
+        "- hPa"
+    )
+
     init {
         viewModelScope.launch {
             initSensors()
@@ -63,19 +81,15 @@ class MainViewModel(
     }
 
     fun initSensors() {
-        sensorsService.initSensorById(Sensor.TYPE_ACCELEROMETER, {
-            values -> processAccelerationValues(values)
-        })
-        sensorsService.initSensorById(Sensor.TYPE_HEART_RATE, {
-            values -> processHearBeatValues(values)
-        })
-        sensorsService.initSensorById(Sensor.TYPE_AMBIENT_TEMPERATURE, {
-            values -> processTemperatureValues(values)
-        })
+        sensorsService.initSensorById(Sensor.TYPE_ACCELEROMETER, { values -> processAccelerationValues(values) })
+        sensorsService.initSensorById(Sensor.TYPE_HEART_RATE, { values -> processHearBeatValues(values) })
+        sensorsService.initSensorById(Sensor.TYPE_AMBIENT_TEMPERATURE, { values -> processTemperatureValues(values) })
+        sensorsService.initSensorById(Sensor.TYPE_RELATIVE_HUMIDITY, { values -> processHumidityValues(values) })
+        sensorsService.initSensorById(Sensor.TYPE_PRESSURE, { values -> processPressureValues(values) })
     }
 
     private fun processHearBeatValues(values: List<Float>) {
-        _heartBeat.update { values[0].toDouble() }
+        _heartBeat.update { values[0] }
     }
 
     private fun processAccelerationValues(values: List<Float>) {
@@ -90,6 +104,14 @@ class MainViewModel(
 
     private fun processTemperatureValues(values: List<Float>) {
         _temperature.update { values[0] }
+    }
+
+    private fun processHumidityValues(values: List<Float>) {
+        _humidity.update { values[0] }
+    }
+
+    private fun processPressureValues(values: List<Float>) {
+        _pressure.update { values[0] }
     }
 
     override fun onCleared() {

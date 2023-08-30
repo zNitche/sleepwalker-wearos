@@ -24,3 +24,17 @@ class AmbientTemperatureSensor(
     sensorManager = sensorManager,
     sensorType = Sensor.TYPE_AMBIENT_TEMPERATURE,
 )
+
+class PressureSensor(
+    sensorManager: SensorManager
+): DeviceSensor(
+    sensorManager = sensorManager,
+    sensorType = Sensor.TYPE_PRESSURE,
+)
+
+class RelativeHumiditySensor(
+    sensorManager: SensorManager
+): DeviceSensor(
+    sensorManager = sensorManager,
+    sensorType = Sensor.TYPE_RELATIVE_HUMIDITY,
+)

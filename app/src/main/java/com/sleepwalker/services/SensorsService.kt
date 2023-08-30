@@ -5,6 +5,8 @@ import com.sleepwalker.services.sensors.AccelerationSensor
 import com.sleepwalker.services.sensors.AmbientTemperatureSensor
 import com.sleepwalker.services.sensors.DeviceSensor
 import com.sleepwalker.services.sensors.HeartBeatSensor
+import com.sleepwalker.services.sensors.PressureSensor
+import com.sleepwalker.services.sensors.RelativeHumiditySensor
 
 class SensorsService(private val sensorManager: SensorManager) {
     private val sensors: List<DeviceSensor> = getSensors()
@@ -13,7 +15,9 @@ class SensorsService(private val sensorManager: SensorManager) {
         return listOf(
             AccelerationSensor(sensorManager),
             HeartBeatSensor(sensorManager),
-            AmbientTemperatureSensor(sensorManager)
+            AmbientTemperatureSensor(sensorManager),
+            PressureSensor(sensorManager),
+            RelativeHumiditySensor(sensorManager)
         )
     }
 

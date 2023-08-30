@@ -23,6 +23,8 @@ fun MainView(viewModel: MainViewModel) {
     val heartBeatText = viewModel.heartBeatText.collectAsStateWithLifecycle().value
     val accelerationText = viewModel.accelerationText.collectAsStateWithLifecycle().value
     val temperatureText = viewModel.temperatureText.collectAsStateWithLifecycle().value
+    val humidityText = viewModel.humidityText.collectAsStateWithLifecycle().value
+    val pressureText = viewModel.pressureText.collectAsStateWithLifecycle().value
 
     val isRunning = viewModel.isRunning.collectAsStateWithLifecycle().value
 
@@ -48,8 +50,10 @@ fun MainView(viewModel: MainViewModel) {
             item { AppTitleText(APP_TAG) }
             item { ProcessingToggle(isRunning, viewModel::setIsRunning) }
             item { HBSChip(heartBeatText) }
-            item { AccelerationChip(accelerationText) }
             item { EnvironmentTemperatureChip(temperatureText) }
+            item { RelativeHumidityChip(humidityText) }
+            item { PressureChip(pressureText) }
+            item { AccelerationChip(accelerationText) }
             item { SettingsNavButton(viewModel) }
         }
     }
