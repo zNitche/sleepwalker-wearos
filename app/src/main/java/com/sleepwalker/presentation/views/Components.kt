@@ -12,12 +12,9 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Api
-import androidx.compose.material.icons.filled.Approval
-import androidx.compose.material.icons.filled.DeviceThermostat
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Flip
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -56,11 +53,11 @@ fun ProcessingToggle(isRunning: Boolean, setIsRunning: (Boolean) -> Unit) {
         checked = isRunning,
         colors = ToggleChipDefaults.toggleChipColors(),
         onCheckedChange = { enabled -> setIsRunning(enabled) },
-        label = { Text("Running") },
+        label = { Text("Logging") },
         toggleControl = {
             Icon(
                 imageVector = ToggleChipDefaults.switchIcon(isRunning),
-                contentDescription = "Running"
+                contentDescription = "Logging"
             )
         }
     )

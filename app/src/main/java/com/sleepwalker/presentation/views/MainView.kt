@@ -47,13 +47,9 @@ fun MainView(viewModel: MainViewModel) {
 
             item { AppTitleText(APP_TAG) }
             item { ProcessingToggle(isRunning, viewModel::setIsRunning) }
-
-            if (isRunning) {
-                item { HBSChip(heartBeatText) }
-                item { AccelerationChip(accelerationText) }
-                item { EnvironmentTemperatureChip(temperatureText) }
-            }
-
+            item { HBSChip(heartBeatText) }
+            item { AccelerationChip(accelerationText) }
+            item { EnvironmentTemperatureChip(temperatureText) }
             item { SettingsNavButton(viewModel) }
         }
     }

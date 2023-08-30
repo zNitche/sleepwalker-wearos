@@ -54,14 +54,7 @@ class MainViewModel(
 
     init {
         viewModelScope.launch {
-            isRunning.collect {
-                if (it) {
-                    initSensors()
-
-                } else {
-                    sensorsService.tearDown()
-                }
-            }
+            initSensors()
         }
     }
 
@@ -100,8 +93,8 @@ class MainViewModel(
     }
 
     override fun onCleared() {
-        super.onCleared()
         sensorsService.tearDown()
+        super.onCleared()
     }
 }
 
