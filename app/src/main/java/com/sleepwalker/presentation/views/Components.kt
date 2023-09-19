@@ -1,5 +1,6 @@
 package com.sleepwalker.presentation.views
 
+import android.widget.EditText
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -225,9 +226,7 @@ fun ApplySettingsButton(onClick: () -> Unit) {
 fun TextInput(text: MutableState<String>, icon: @Composable() () -> Unit) {
     BasicTextField(
         value = text.value,
-        onValueChange = { if(it.isNotEmpty()) {
-            text.value = it
-        }},
+        onValueChange = { text.value = it},
         decorationBox = { innerTextField ->
             Row(
                 Modifier
