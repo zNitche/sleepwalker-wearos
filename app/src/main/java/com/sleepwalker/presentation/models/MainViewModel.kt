@@ -1,13 +1,11 @@
 package com.sleepwalker.presentation.models
 
 import android.hardware.Sensor
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.sleepwalker.APP_TAG
 import com.sleepwalker.api.ApiClient
 import com.sleepwalker.services.ConfigService
 import com.sleepwalker.services.SensorsService
@@ -27,7 +25,7 @@ class MainViewModel(
     val navController: NavHostController,
     private val configService: ConfigService
 ): ViewModel() {
-    private val apiClient = ApiClient.getInstance(configService.loadConfig())
+    private val config = configService.loadConfig()
 
     val isRunning = MutableStateFlow(false)
     private val _heartBeat = MutableStateFlow(0f)
@@ -42,10 +40,10 @@ class MainViewModel(
     private val _pressure = MutableStateFlow(0f)
 
     init {
+        val apiClient = ApiClient.getInstance(config.apiAddress)
         if (apiClient != null) {
             GlobalScope.launch(Dispatchers.IO) {
-                val response = apiClient.authCheck()
-                Log.d(APP_TAG, response.code().toString())
+                val response = apiClient.authCheck(config.apiKey)
             }
         }
     }
