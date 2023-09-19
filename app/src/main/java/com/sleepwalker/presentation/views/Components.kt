@@ -71,7 +71,7 @@ fun ApiConnectivityStatusChip(status: String) {
         modifier = Modifier.fillMaxWidth(),
         onClick = { },
         label = {
-            Text(text = "Status: $status")
+            Text(text = "API Status: $status")
         },
         icon = {
             Icon(

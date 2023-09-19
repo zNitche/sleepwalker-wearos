@@ -38,28 +38,6 @@ class MainViewModel(
     private val _humidity = MutableStateFlow(0f)
     private val _pressure = MutableStateFlow(0f)
 
-    init {
-        val apiClient = ApiClient.getInstance(config.apiAddress)
-        if (apiClient != null) {
-            checkAPiConnectivity(apiClient)
-        }
-    }
-
-    private fun checkAPiConnectivity(apiClient: SleepwalkerApi) {
-        viewModelScope.launch {
-            while (true) {
-                try {
-                    val response = apiClient.authCheck(config.apiKey)
-                    apiConnectionStatus.update { response.code().toString() }
-                } catch (_: Exception) {
-                    apiConnectionStatus.update { "500" }
-                }
-
-                delay(2000)
-            }
-        }
-    }
-
     val heartBeatText = _heartBeat.map {
         heartBeat -> "${heartBeat.toInt()} bpm"
     }.stateIn(
@@ -101,8 +79,26 @@ class MainViewModel(
     )
 
     init {
+        val apiClient = ApiClient.getInstance(config.apiAddress)
+        if (apiClient != null) {
+            checkAPiConnectivity(apiClient)
+        }
+
+        initSensors()
+    }
+
+    private fun checkAPiConnectivity(apiClient: SleepwalkerApi) {
         viewModelScope.launch {
-            initSensors()
+            while (true) {
+                try {
+                    val response = apiClient.authCheck(config.apiKey)
+                    apiConnectionStatus.update { response.code().toString() }
+                } catch (_: Exception) {
+                    apiConnectionStatus.update { "500" }
+                }
+
+                delay(2000)
+            }
         }
     }
 
@@ -110,7 +106,7 @@ class MainViewModel(
         isRunning.update { state }
     }
 
-    fun initSensors() {
+    private fun initSensors() {
         sensorsService.initSensorById(Sensor.TYPE_ACCELEROMETER, { values -> processAccelerationValues(values) })
         sensorsService.initSensorById(Sensor.TYPE_HEART_RATE, { values -> processHearBeatValues(values) })
         sensorsService.initSensorById(Sensor.TYPE_AMBIENT_TEMPERATURE, { values -> processTemperatureValues(values) })

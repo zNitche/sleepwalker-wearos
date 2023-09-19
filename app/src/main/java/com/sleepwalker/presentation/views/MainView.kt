@@ -49,13 +49,13 @@ fun MainView(viewModel: MainViewModel) {
         ) {
 
             item { AppTitleText(APP_TAG) }
-            item { ApiConnectivityStatusChip(apiConnectionStatus) }
             item { ProcessingToggle(isRunning, viewModel::setIsRunning) }
             item { HBSChip(heartBeatText) }
             item { EnvironmentTemperatureChip(temperatureText) }
             item { RelativeHumidityChip(humidityText) }
             item { PressureChip(pressureText) }
             item { AccelerationChip(accelerationText) }
+            item { ApiConnectivityStatusChip(apiConnectionStatus) }
             item { SettingsNavButton(viewModel) }
         }
     }
