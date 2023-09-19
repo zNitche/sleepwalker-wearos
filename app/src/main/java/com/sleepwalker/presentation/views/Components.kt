@@ -66,6 +66,26 @@ fun ProcessingToggle(isRunning: Boolean, setIsRunning: (Boolean) -> Unit) {
 }
 
 @Composable
+fun ApiConnectivityStatusChip(status: String) {
+    Chip(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { },
+        label = {
+            Text(text = "Status: $status")
+        },
+        icon = {
+            Icon(
+                imageVector = Icons.Default.Api,
+                contentDescription = "Api connectivity",
+                tint = Color.White,
+                modifier = Modifier.wrapContentSize(align = Alignment.Center)
+            )
+        },
+        colors = ChipDefaults.secondaryChipColors()
+    )
+}
+
+@Composable
 fun HBSChip(hbsText: String) {
     Chip(
         modifier = Modifier.fillMaxWidth(),

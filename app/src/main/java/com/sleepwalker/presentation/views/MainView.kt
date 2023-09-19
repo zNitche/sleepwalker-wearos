@@ -27,6 +27,7 @@ fun MainView(viewModel: MainViewModel) {
     val pressureText = viewModel.pressureText.collectAsStateWithLifecycle().value
 
     val isRunning = viewModel.isRunning.collectAsStateWithLifecycle().value
+    val apiConnectionStatus = viewModel.apiConnectionStatus.collectAsStateWithLifecycle().value
 
     Scaffold(
         timeText = {
@@ -48,6 +49,7 @@ fun MainView(viewModel: MainViewModel) {
         ) {
 
             item { AppTitleText(APP_TAG) }
+            item { ApiConnectivityStatusChip(apiConnectionStatus) }
             item { ProcessingToggle(isRunning, viewModel::setIsRunning) }
             item { HBSChip(heartBeatText) }
             item { EnvironmentTemperatureChip(temperatureText) }

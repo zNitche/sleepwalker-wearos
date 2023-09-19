@@ -7,11 +7,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.sleepwalker.api.ApiClient
+import com.sleepwalker.api.SleepwalkerApi
 import com.sleepwalker.services.ConfigService
 import com.sleepwalker.services.SensorsService
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -19,7 +18,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-@OptIn(DelicateCoroutinesApi::class)
 class MainViewModel(
     private val sensorsService: SensorsService,
     val navController: NavHostController,
@@ -28,6 +26,7 @@ class MainViewModel(
     private val config = configService.loadConfig()
 
     val isRunning = MutableStateFlow(false)
+    val apiConnectionStatus = MutableStateFlow("500")
     private val _heartBeat = MutableStateFlow(0f)
 
     private val _accelerationChanged = MutableStateFlow(false)
@@ -42,8 +41,21 @@ class MainViewModel(
     init {
         val apiClient = ApiClient.getInstance(config.apiAddress)
         if (apiClient != null) {
-            GlobalScope.launch(Dispatchers.IO) {
-                val response = apiClient.authCheck(config.apiKey)
+            checkAPiConnectivity(apiClient)
+        }
+    }
+
+    private fun checkAPiConnectivity(apiClient: SleepwalkerApi) {
+        viewModelScope.launch {
+            while (true) {
+                try {
+                    val response = apiClient.authCheck(config.apiKey)
+                    apiConnectionStatus.update { response.code().toString() }
+                } catch (_: Exception) {
+                    apiConnectionStatus.update { "500" }
+                }
+
+                delay(2000)
             }
         }
     }
