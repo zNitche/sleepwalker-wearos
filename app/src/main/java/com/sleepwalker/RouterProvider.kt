@@ -30,11 +30,13 @@ class RouterProvider(private val application: MainApplication) {
     @Composable
     private fun CreateMainView(navController: NavHostController) {
         val sensorsService = SensorsService(application.sensorManager)
+        val configService = application.configService
 
         val mainViewModel = viewModel<MainViewModel>(
             factory = MainViewModelFactory(
                 sensorsService=sensorsService,
-                navController=navController)
+                navController=navController,
+                configService=configService)
         )
 
         return MainView(viewModel = mainViewModel)

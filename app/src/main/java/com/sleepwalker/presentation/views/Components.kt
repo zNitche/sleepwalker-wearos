@@ -15,7 +15,6 @@ import androidx.compose.material.icons.filled.Api
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Flip
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Percent
 import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState

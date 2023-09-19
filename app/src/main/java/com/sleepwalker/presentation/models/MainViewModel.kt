@@ -1,12 +1,19 @@
 package com.sleepwalker.presentation.models
 
 import android.hardware.Sensor
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.sleepwalker.APP_TAG
+import com.sleepwalker.api.ApiClient
+import com.sleepwalker.services.ConfigService
 import com.sleepwalker.services.SensorsService
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -14,10 +21,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+@OptIn(DelicateCoroutinesApi::class)
 class MainViewModel(
     private val sensorsService: SensorsService,
-    val navController: NavHostController
+    val navController: NavHostController,
+    private val configService: ConfigService
 ): ViewModel() {
+    private val apiClient = ApiClient.getInstance(configService.loadConfig())
+
     val isRunning = MutableStateFlow(false)
     private val _heartBeat = MutableStateFlow(0f)
 
@@ -29,6 +40,15 @@ class MainViewModel(
     private val _temperature = MutableStateFlow(0f)
     private val _humidity = MutableStateFlow(0f)
     private val _pressure = MutableStateFlow(0f)
+
+    init {
+        if (apiClient != null) {
+            GlobalScope.launch(Dispatchers.IO) {
+                val response = apiClient.authCheck()
+                Log.d(APP_TAG, response.code().toString())
+            }
+        }
+    }
 
     val heartBeatText = _heartBeat.map {
         heartBeat -> "${heartBeat.toInt()} bpm"
@@ -123,14 +143,16 @@ class MainViewModel(
 
 class MainViewModelFactory(
     private val sensorsService: SensorsService,
-    private val navController: NavHostController
+    private val navController: NavHostController,
+    private val configService: ConfigService
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return MainViewModel(
                 sensorsService = sensorsService,
-                navController = navController
+                navController = navController,
+                configService = configService
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
