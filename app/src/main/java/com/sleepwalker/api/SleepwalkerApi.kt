@@ -1,10 +1,19 @@
 package com.sleepwalker.api
 
+import com.sleepwalker.api.interfaces.LogsSession
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface SleepwalkerApi {
     @GET("/api/auth-check/")
     suspend fun authCheck(@Header("X-API-KEY") apiKey: String): Response<Void>
+
+    @POST("/api/sessions/init/")
+    suspend fun initLogsSession(@Header("X-API-KEY") apiKey: String): Response<LogsSession>
+
+    @POST("/api/sessions/{sessionUUID}/close/")
+    suspend fun closeLogsSession(@Header("X-API-KEY") apiKey: String, @Path("sessionUUID") sessionUUID: String): Response<Void>
 }

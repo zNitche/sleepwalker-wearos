@@ -27,6 +27,9 @@ class MainViewModel(
 
     val isRunning = MutableStateFlow(false)
     val apiConnectionStatus = MutableStateFlow("500")
+    private val logsSessionId = mutableStateOf("")
+    private var apiClient: SleepwalkerApi? = null
+
     private val _heartBeat = MutableStateFlow(0f)
 
     private val _accelerationChanged = MutableStateFlow(false)
@@ -79,10 +82,8 @@ class MainViewModel(
     )
 
     init {
-        val apiClient = ApiClient.getInstance(config.apiAddress)
-        if (apiClient != null) {
-            checkAPiConnectivity(apiClient)
-        }
+        apiClient = ApiClient.getInstance(config.apiAddress)
+        apiClient?.let { checkAPiConnectivity(it) }
 
         initSensors()
     }
@@ -102,8 +103,37 @@ class MainViewModel(
         }
     }
 
+    private fun initLogsSession(apiClient: SleepwalkerApi) {
+        viewModelScope.launch {
+            val response = apiClient.initLogsSession(config.apiKey)
+
+            if (response.code() == 201) {
+                logsSessionId.value = response.body()?.uuid ?: ""
+            }
+        }
+    }
+
+    private fun closeLogsSession(apiClient: SleepwalkerApi) {
+        viewModelScope.launch {
+            val response = apiClient.closeLogsSession(config.apiKey, logsSessionId.value)
+
+            if (response.code() == 200) {
+                logsSessionId.value = ""
+            }
+        }
+    }
+
     fun setIsRunning(state: Boolean) {
+        handleLogsSession(state)
         isRunning.update { state }
+    }
+
+    private fun handleLogsSession(running: Boolean) {
+        if (running) {
+            apiClient?.let { initLogsSession(it) }
+        } else {
+            apiClient?.let { closeLogsSession(it) }
+        }
     }
 
     private fun initSensors() {
