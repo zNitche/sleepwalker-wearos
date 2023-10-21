@@ -10,6 +10,7 @@ import com.sleepwalker.api.ApiClient
 import com.sleepwalker.api.SleepwalkerApi
 import com.sleepwalker.services.ConfigService
 import com.sleepwalker.services.SensorsService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -84,12 +85,13 @@ class MainViewModel(
     init {
         apiClient = ApiClient.getInstance(config.apiAddress)
         apiClient?.let { checkAPiConnectivity(it) }
+        apiClient?.let { checkIfSleepwalkingDetected(it) }
 
         initSensors()
     }
 
     private fun checkAPiConnectivity(apiClient: SleepwalkerApi) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             while (true) {
                 try {
                     val response = apiClient.authCheck(config.apiKey)
@@ -103,23 +105,46 @@ class MainViewModel(
         }
     }
 
-    private fun initLogsSession(apiClient: SleepwalkerApi) {
-        viewModelScope.launch {
-            val response = apiClient.initLogsSession(config.apiKey)
+    private fun checkIfSleepwalkingDetected(apiClient: SleepwalkerApi) {
+        viewModelScope.launch(Dispatchers.IO) {
+            while (true) {
+                try {
+                    val response = apiClient.eventDetected(config.apiKey)
+                    apiConnectionStatus.update { response.code().toString() }
+                } catch (_: Exception) {
+                    apiConnectionStatus.update { "500" }
+                }
 
-            if (response.code() == 201) {
-                logsSessionId.value = response.body()?.uuid ?: ""
+                delay(2000)
+            }
+        }
+    }
+
+    private fun initLogsSession(apiClient: SleepwalkerApi) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = apiClient.initLogsSession(config.apiKey)
+
+                if (response.code() == 201) {
+                    logsSessionId.value = response.body()?.uuid ?: ""
+                } else {
+                    isRunning.update { false }
+                }
+            } catch (_: Exception) {
+                isRunning.update { false }
             }
         }
     }
 
     private fun closeLogsSession(apiClient: SleepwalkerApi) {
-        viewModelScope.launch {
-            val response = apiClient.closeLogsSession(config.apiKey, logsSessionId.value)
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = apiClient.closeLogsSession(config.apiKey, logsSessionId.value)
 
-            if (response.code() == 200) {
-                logsSessionId.value = ""
-            }
+                if (response.code() == 200) {
+                    logsSessionId.value = ""
+                }
+            } catch (_: Exception) {  }
         }
     }
 

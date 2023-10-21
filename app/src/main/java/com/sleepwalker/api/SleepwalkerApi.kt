@@ -11,6 +11,9 @@ interface SleepwalkerApi {
     @GET("/api/auth-check/")
     suspend fun authCheck(@Header("X-API-KEY") apiKey: String): Response<Void>
 
+    @GET("/api/event-detected/")
+    suspend fun eventDetected(@Header("X-API-KEY") apiKey: String): Response<Void>
+
     @POST("/api/sessions/init/")
     suspend fun initLogsSession(@Header("X-API-KEY") apiKey: String): Response<LogsSession>
 
