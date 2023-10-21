@@ -31,10 +31,12 @@ class RouterProvider(private val application: MainApplication) {
     private fun CreateMainView(navController: NavHostController) {
         val sensorsService = SensorsService(application.sensorManager)
         val configService = application.configService
+        val vibrationsManager = application.vibrationsManager
 
         val mainViewModel = viewModel<MainViewModel>(
             factory = MainViewModelFactory(
                 sensorsService=sensorsService,
+                vibrationsManager=vibrationsManager,
                 navController=navController,
                 configService=configService)
         )

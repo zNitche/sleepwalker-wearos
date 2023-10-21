@@ -1,6 +1,8 @@
 package com.sleepwalker.presentation.models
 
 import android.hardware.Sensor
+import android.os.VibrationEffect
+import android.os.VibratorManager
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -22,14 +24,18 @@ import kotlinx.coroutines.launch
 class MainViewModel(
     private val sensorsService: SensorsService,
     val navController: NavHostController,
-    private val configService: ConfigService
+    private val configService: ConfigService,
+    private val vibrationsManager: VibratorManager
 ): ViewModel() {
     private val config = configService.loadConfig()
 
     val isRunning = MutableStateFlow(false)
+    val sleepwalkingDetected = MutableStateFlow(false)
     val apiConnectionStatus = MutableStateFlow("500")
     private val logsSessionId = mutableStateOf("")
+
     private var apiClient: SleepwalkerApi? = null
+    private val vibrator = vibrationsManager.defaultVibrator
 
     private val _heartBeat = MutableStateFlow(0f)
 
@@ -108,14 +114,22 @@ class MainViewModel(
     private fun checkIfSleepwalkingDetected(apiClient: SleepwalkerApi) {
         viewModelScope.launch(Dispatchers.IO) {
             while (true) {
-                try {
-                    val response = apiClient.eventDetected(config.apiKey)
-                    apiConnectionStatus.update { response.code().toString() }
-                } catch (_: Exception) {
-                    apiConnectionStatus.update { "500" }
-                }
+                if (isRunning.value) {
+                    try {
+                        val response = apiClient.eventDetected(config.apiKey)
+                        val detected = response.code() == 200
 
-                delay(2000)
+                        if (detected) {
+                            startVibrations()
+                        }
+
+                        sleepwalkingDetected.update { detected }
+                    } catch (_: Exception) {
+                        sleepwalkingDetected.update { false }
+                    }
+
+                    delay(2000)
+                }
             }
         }
     }
@@ -146,6 +160,11 @@ class MainViewModel(
                 }
             } catch (_: Exception) {  }
         }
+    }
+
+    private fun startVibrations() {
+        val vibrationEffectSingle = VibrationEffect.createOneShot(2000, VibrationEffect.DEFAULT_AMPLITUDE)
+        vibrator.vibrate(vibrationEffectSingle)
     }
 
     fun setIsRunning(state: Boolean) {
@@ -205,7 +224,8 @@ class MainViewModel(
 class MainViewModelFactory(
     private val sensorsService: SensorsService,
     private val navController: NavHostController,
-    private val configService: ConfigService
+    private val configService: ConfigService,
+    private val vibrationsManager: VibratorManager
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
@@ -213,7 +233,8 @@ class MainViewModelFactory(
             return MainViewModel(
                 sensorsService = sensorsService,
                 navController = navController,
-                configService = configService
+                configService = configService,
+                vibrationsManager = vibrationsManager
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
