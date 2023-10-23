@@ -10,6 +10,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.sleepwalker.api.ApiClient
 import com.sleepwalker.api.SleepwalkerApi
+import com.sleepwalker.api.interfaces.BodySensorsLog
+import com.sleepwalker.api.interfaces.EnvironmentSensorsLog
 import com.sleepwalker.services.ConfigService
 import com.sleepwalker.services.SensorsService
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +37,7 @@ class MainViewModel(
     private val logsSessionId = mutableStateOf("")
 
     private var apiClient: SleepwalkerApi? = null
+    private val apiCallsDelay: Long = 2000
     private val vibrator = vibrationsManager.defaultVibrator
 
     private val _heartBeat = MutableStateFlow(0f)
@@ -92,6 +95,8 @@ class MainViewModel(
         apiClient = ApiClient.getInstance(config.apiAddress)
         apiClient?.let { checkAPiConnectivity(it) }
         apiClient?.let { checkIfSleepwalkingDetected(it) }
+        apiClient?.let { sendBodySensorsData(it) }
+        apiClient?.let { sendEnvironmentSensorsData(it) }
 
         initSensors()
     }
@@ -106,7 +111,7 @@ class MainViewModel(
                     apiConnectionStatus.update { "500" }
                 }
 
-                delay(2000)
+                delay(apiCallsDelay)
             }
         }
     }
@@ -120,7 +125,7 @@ class MainViewModel(
                         val detected = response.code() == 200
 
                         if (detected) {
-                            startVibrations()
+                            vibrate()
                         }
 
                         sleepwalkingDetected.update { detected }
@@ -128,7 +133,7 @@ class MainViewModel(
                         sleepwalkingDetected.update { false }
                     }
 
-                    delay(2000)
+                    delay(apiCallsDelay)
                 }
             }
         }
@@ -162,7 +167,46 @@ class MainViewModel(
         }
     }
 
-    private fun startVibrations() {
+    private fun sendBodySensorsData(apiClient: SleepwalkerApi) {
+        viewModelScope.launch(Dispatchers.IO) {
+            while (true) {
+                if (isRunning.value) {
+                    try {
+                        apiClient.addBodySensorsLog(config.apiKey,
+                            logsSessionId.value,
+                            BodySensorsLog(_heartBeat.value,
+                                           _accelerationX.value,
+                                           _accelerationY.value,
+                                           _accelerationZ.value)
+                        )
+
+                    } catch (_: Exception) {  }
+                }
+
+                delay(apiCallsDelay)
+            }
+        }
+    }
+
+    private fun sendEnvironmentSensorsData(apiClient: SleepwalkerApi) {
+        viewModelScope.launch(Dispatchers.IO) {
+            while (true) {
+                if (isRunning.value) {
+                    try {
+                        apiClient.addEnvironmentSensorsLog(config.apiKey,
+                            logsSessionId.value,
+                            EnvironmentSensorsLog(_temperature.value, _humidity.value)
+                        )
+
+                    } catch (_: Exception) {  }
+                }
+
+                delay(apiCallsDelay)
+            }
+        }
+    }
+
+    private fun vibrate() {
         val vibrationEffectSingle = VibrationEffect.createOneShot(2000, VibrationEffect.DEFAULT_AMPLITUDE)
         vibrator.vibrate(vibrationEffectSingle)
     }
