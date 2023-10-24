@@ -1,6 +1,5 @@
 package com.sleepwalker.presentation.views
 
-import android.widget.EditText
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -190,7 +189,7 @@ fun PressureChip(pressureText: String) {
 fun SettingsNavButton(viewModel: MainViewModel) {
     Button(
         onClick = {
-            viewModel.setIsRunning(false)
+            viewModel.clearModel()
             viewModel.navController.navigate("settings")
         },
         modifier = Modifier.fillMaxWidth(),

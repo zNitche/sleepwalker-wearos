@@ -15,6 +15,7 @@ import com.sleepwalker.api.interfaces.EnvironmentSensorsLog
 import com.sleepwalker.services.ConfigService
 import com.sleepwalker.services.SensorsService
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -99,6 +100,11 @@ class MainViewModel(
         apiClient?.let { sendEnvironmentSensorsData(it) }
 
         initSensors()
+    }
+
+    fun clearModel() {
+        setIsRunning(false)
+        viewModelScope.cancel()
     }
 
     private fun checkAPiConnectivity(apiClient: SleepwalkerApi) {
