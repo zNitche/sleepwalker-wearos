@@ -28,6 +28,7 @@ fun MainView(viewModel: MainViewModel) {
 
     val isRunning = viewModel.isRunning.collectAsStateWithLifecycle().value
     val apiConnectionStatus = viewModel.apiConnectionStatus.collectAsStateWithLifecycle().value
+    val sleepwalkingDetected = viewModel.sleepwalkingDetected.collectAsStateWithLifecycle().value
 
     Scaffold(
         timeText = {
@@ -50,6 +51,9 @@ fun MainView(viewModel: MainViewModel) {
 
             item { AppTitleText(APP_TAG) }
             item { ProcessingToggle(isRunning, viewModel::setIsRunning) }
+            if (sleepwalkingDetected) {
+                item { ResetLoggingButton(viewModel::resetLoggingAction) }
+            }
             item { HBSChip(heartBeatText) }
             item { EnvironmentTemperatureChip(temperatureText) }
             item { RelativeHumidityChip(humidityText) }

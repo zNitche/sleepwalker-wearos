@@ -33,7 +33,8 @@ class MainViewModel(
     private val config = configService.loadConfig()
 
     val isRunning = MutableStateFlow(false)
-    val sleepwalkingDetected = MutableStateFlow(false)
+    var sleepwalkingDetected = MutableStateFlow(false)
+
     val apiConnectionStatus = MutableStateFlow("500")
     private val logsSessionId = mutableStateOf("")
 
@@ -173,6 +174,14 @@ class MainViewModel(
         }
     }
 
+    private fun resetLogging(apiClient: SleepwalkerApi) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                apiClient.resetLogging(config.apiKey)
+            } catch (_: Exception) {  }
+        }
+    }
+
     private fun sendBodySensorsData(apiClient: SleepwalkerApi) {
         viewModelScope.launch(Dispatchers.IO) {
             while (true) {
@@ -212,6 +221,10 @@ class MainViewModel(
         }
     }
 
+    fun resetLoggingAction() {
+        apiClient?.let { resetLogging(it) }
+    }
+
     private fun vibrate() {
         val vibrationEffectSingle = VibrationEffect.createOneShot(2000, VibrationEffect.DEFAULT_AMPLITUDE)
         vibrator.vibrate(vibrationEffectSingle)
@@ -220,6 +233,7 @@ class MainViewModel(
     fun setIsRunning(state: Boolean) {
         handleLogsSession(state)
         isRunning.update { state }
+        sleepwalkingDetected.update { false }
     }
 
     private fun handleLogsSession(running: Boolean) {

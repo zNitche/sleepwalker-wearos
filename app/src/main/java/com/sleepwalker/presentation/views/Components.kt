@@ -66,6 +66,17 @@ fun ProcessingToggle(isRunning: Boolean, setIsRunning: (Boolean) -> Unit) {
 }
 
 @Composable
+fun ResetLoggingButton(resetLogging: () -> Unit) {
+    Button(
+        onClick = { resetLogging() },
+        modifier = Modifier.fillMaxWidth(),
+        colors = ButtonDefaults.secondaryButtonColors()
+    ) {
+        Text(text = "Reset Logging")
+    }
+}
+
+@Composable
 fun ApiConnectivityStatusChip(status: String) {
     Chip(
         modifier = Modifier.fillMaxWidth(),
