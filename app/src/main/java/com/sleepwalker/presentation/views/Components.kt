@@ -66,11 +66,12 @@ fun ProcessingToggle(isRunning: Boolean, setIsRunning: (Boolean) -> Unit) {
 }
 
 @Composable
-fun ResetLoggingButton(resetLogging: () -> Unit) {
+fun ResetLoggingButton(resetLogging: () -> Unit, resetInProgress: Boolean) {
     Button(
         onClick = { resetLogging() },
         modifier = Modifier.fillMaxWidth(),
-        colors = ButtonDefaults.secondaryButtonColors()
+        colors = ButtonDefaults.secondaryButtonColors(),
+        enabled = !resetInProgress
     ) {
         Text(text = "Reset Logging")
     }

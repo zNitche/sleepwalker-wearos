@@ -33,7 +33,8 @@ class MainViewModel(
     private val config = configService.loadConfig()
 
     val isRunning = MutableStateFlow(false)
-    var sleepwalkingDetected = MutableStateFlow(false)
+    val sleepwalkingDetected = MutableStateFlow(false)
+    val sleepwalkingDetectionResetInProgress = MutableStateFlow(false)
 
     val apiConnectionStatus = MutableStateFlow("500")
     private val logsSessionId = mutableStateOf("")
@@ -176,9 +177,12 @@ class MainViewModel(
 
     private fun resetLogging(apiClient: SleepwalkerApi) {
         viewModelScope.launch(Dispatchers.IO) {
+            sleepwalkingDetectionResetInProgress.update { true }
             try {
                 apiClient.resetLogging(config.apiKey)
             } catch (_: Exception) {  }
+
+            sleepwalkingDetectionResetInProgress.update { false }
         }
     }
 
