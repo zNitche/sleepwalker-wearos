@@ -37,7 +37,7 @@ class MainViewModel(
     val sleepwalkingDetectionResetInProgress = MutableStateFlow(false)
 
     val apiConnectionStatus = MutableStateFlow("500")
-    private val logsSessionId = mutableStateOf("")
+    private var logsSessionId: String = ""
 
     private var apiClient: SleepwalkerApi? = null
     private val apiCallsDelay: Long = 2000
@@ -153,7 +153,7 @@ class MainViewModel(
                 val response = apiClient.initLogsSession(config.apiKey)
 
                 if (response.code() == 201) {
-                    logsSessionId.value = response.body()?.uuid ?: ""
+                    logsSessionId = response.body()?.uuid ?: ""
                 } else {
                     isRunning.update { false }
                 }
@@ -166,10 +166,10 @@ class MainViewModel(
     private fun closeLogsSession(apiClient: SleepwalkerApi) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = apiClient.closeLogsSession(config.apiKey, logsSessionId.value)
+                val response = apiClient.closeLogsSession(config.apiKey, logsSessionId)
 
                 if (response.code() == 200) {
-                    logsSessionId.value = ""
+                    logsSessionId = ""
                 }
             } catch (_: Exception) {  }
         }
@@ -192,7 +192,7 @@ class MainViewModel(
                 if (isRunning.value) {
                     try {
                         apiClient.addBodySensorsLog(config.apiKey,
-                            logsSessionId.value,
+                            logsSessionId,
                             BodySensorsLog(_heartBeat.value,
                                            _accelerationX.value,
                                            _accelerationY.value,
@@ -213,7 +213,7 @@ class MainViewModel(
                 if (isRunning.value) {
                     try {
                         apiClient.addEnvironmentSensorsLog(config.apiKey,
-                            logsSessionId.value,
+                            logsSessionId,
                             EnvironmentSensorsLog(_temperature.value, _humidity.value)
                         )
 

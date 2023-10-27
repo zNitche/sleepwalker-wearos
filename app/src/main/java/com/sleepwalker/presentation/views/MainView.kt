@@ -52,7 +52,7 @@ fun MainView(viewModel: MainViewModel) {
 
             item { AppTitleText(APP_TAG) }
             item { ProcessingToggle(isRunning, viewModel::setIsRunning) }
-            if (!sleepwalkingDetected) {
+            if (sleepwalkingDetected) {
                 item { ResetLoggingButton(viewModel::resetLoggingAction,
                     sleepwalkingDetectionResetInProgress) }
             }
