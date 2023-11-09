@@ -24,7 +24,7 @@ interface SleepwalkerApi {
     suspend fun closeLogsSession(@Header("API-KEY") apiKey: String,
                                  @Path("sessionUUID") sessionUUID: String): Response<Void>
 
-    @POST("/api/reset-current-session/")
+    @POST("/api/sessions/reset-current-session/")
     suspend fun resetLogging(@Header("API-KEY") apiKey: String): Response<Void>
 
     @POST("/api/sessions/{sessionUUID}/body-sensors/add/")
