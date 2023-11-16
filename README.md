@@ -24,12 +24,16 @@ Build -> Generate Signed Bundle / APK -> APK
 
 ### Usage
 1. Open App
+
 ![apps](media/apps.png)
 ![start](media/start.png)
 ![start_panels](media/start_panels.png)
-2. Scroll down, tab `Settings`
-3. In `Settings` page fill API address and API key
+
+3. Scroll down, tab `Settings`
+4. In `Settings` page fill API address and API key
+
 ![settings](media/settings.png)
 ![settings_keyboard](media/settings_keyboard.png)
-4. Start logs session by clicking `Logging`
-5. If system detects sleepwalking, vibrations will be triggered and `Rest` button will appear
+
+6. Start logs session by clicking `Logging`
+7. If system detects sleepwalking, vibrations will be triggered and `Rest` button will appear
